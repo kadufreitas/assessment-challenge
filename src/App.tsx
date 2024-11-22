@@ -1,19 +1,23 @@
-import { sdk } from 'api'
+import { getAuthorizationUrl } from 'api'
+import { User } from 'components/User'
+import { useAuthUser } from 'hooks/useAuthUser'
 
-// 0efa34c76b35e48b9bf5bd0f0c09252b9a4b37ed
-sdk
-  .authorize('code')
-  .then(() => sdk.getMe())
-  .then((user) => {
-    console.log(user)
-  })
-
-console.log('sdk', sdk)
 function App() {
+  const { token } = useAuthUser()
+  const authorizationUrl = getAuthorizationUrl()
+
   return (
     <div className="App">
-      {/* <header className="App-header"></header> */}
-      APP
+      {token ? (
+        <>
+          <p>Logged</p>
+          <User />
+        </>
+      ) : (
+        <p>
+          Please <a href={authorizationUrl}>authorize this app</a> on Uphold's Sandbox.
+        </p>
+      )}
     </div>
   )
 }
