@@ -1,0 +1,17 @@
+/* eslint-env node */
+{
+    "extends": ["react-app", "plugin:prettier/recommended"],
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
+    },
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true,
+        "modules": true
+      }
+    }
+  }
