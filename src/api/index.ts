@@ -2,7 +2,7 @@ import SDK from '@uphold/uphold-sdk-javascript'
 
 // "proxy": "http://api-sandbox.uphold.com",
 const sdk = new SDK({
-  baseUrl: 'http://api-sandbox.uphold.com',
+  baseUrl: 'https://api-sandbox.uphold.com',
   clientId: '9648007ecbc76bb58237b48790610331094c0763',
   clientSecret: '3f82ec4e6aecf8b83390456291a12ca4eefdc976',
 })
@@ -10,14 +10,11 @@ const sdk = new SDK({
 export const authorize = (code: string) => sdk.authorize(code)
 
 export const getMe = (options?: Record<string, unknown>) => sdk.getMe(options)
-export async function getUserInfo(accessToken: string) {
+export async function getUserInfo(accessToken?: string) {
   try {
     sdk.getMe({
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PATCH',
+        origin: 'https://wallet-sandbox.uphold.com',
       },
     })
   } catch (error) {

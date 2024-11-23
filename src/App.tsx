@@ -1,4 +1,4 @@
-import { getAuthorizationUrl } from 'api'
+import { getAuthorizationUrl, getUserInfo } from 'api'
 import { User } from 'components/User'
 import { useAuthUser } from 'hooks/useAuthUser'
 
@@ -6,8 +6,13 @@ function App() {
   const { token } = useAuthUser()
   const authorizationUrl = getAuthorizationUrl()
 
+  const handleClick = async () => {
+    await getUserInfo()
+  }
+
   return (
     <div className="App">
+      <button onClick={handleClick}>GET ME</button>
       {token ? (
         <>
           <p>Logged</p>

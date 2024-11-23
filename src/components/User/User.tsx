@@ -10,5 +10,5 @@ export const User = () => {
     console.log(user)
   }, [token])
 
-  return <div>user</div>
+  return <div>User</div>
 }
