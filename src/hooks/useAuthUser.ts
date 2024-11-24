@@ -1,7 +1,7 @@
-import { authorize } from 'api'
+import { getToken } from 'api'
 import { useEffect, useRef, useState } from 'react'
-import { useSearchParams } from './useSearchParams'
 import { useCookie } from './useCookies'
+import { useSearchParams } from './useSearchParams'
 
 export const useAuthUser = () => {
   const { getItem, setItem } = useCookie()
@@ -14,11 +14,12 @@ export const useAuthUser = () => {
   useEffect(() => {
     const fetchAuthorize = async (code: string) => {
       try {
-        debugger
-        const token = await authorize(code)
+        const token = await getToken(code)
 
-        setToken(token.access_token)
-        setItem('token', token.access_token)
+        if (token) {
+          setToken(token)
+          setItem('token', token)
+        }
       } catch (error) {
         setItem('token', '')
         console.error(error)

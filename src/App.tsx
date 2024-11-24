@@ -7,7 +7,10 @@ function App() {
   const authorizationUrl = getAuthorizationUrl()
 
   const handleClick = async () => {
-    await getUserInfo()
+    if (token) {
+      await getUserInfo(token)
+    }
+    // await getUserInfo(token)
   }
 
   return (

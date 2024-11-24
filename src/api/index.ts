@@ -1,55 +1,32 @@
-import SDK from '@uphold/uphold-sdk-javascript'
+const PORT = 5000
 
-// "proxy": "http://api-sandbox.uphold.com",
-const sdk = new SDK({
-  baseUrl: 'https://api-sandbox.uphold.com',
-  clientId: '9648007ecbc76bb58237b48790610331094c0763',
-  clientSecret: '3f82ec4e6aecf8b83390456291a12ca4eefdc976',
-})
+const BASE_URL = `https://localhost:${PORT}`
 
-export const authorize = (code: string) => sdk.authorize(code)
-
-export const getMe = (options?: Record<string, unknown>) => sdk.getMe(options)
-export async function getUserInfo(accessToken?: string) {
+export async function getToken(code: string) {
   try {
-    sdk.getMe({
-      headers: {
-        origin: 'https://wallet-sandbox.uphold.com',
-      },
-    })
+    const response = await fetch(`${BASE_URL}/token?code=${code}`)
+    const result = await response.json()
+
+    return result?.access_token ?? null
   } catch (error) {
     console.log(error)
   }
-  //   'Access-Control-Allow-Headers': 'Content-Type',
-  //           'Access-Control-Allow-Origin': '*',
-  //           'Content-Type': 'application/json',
-  //           'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PATCH',
-  //   try {
-  //     // const response = await axios.request({
-  //     //   method: 'GET',
-  //     //   url: `${process.env.BASE_URL}/v0/me`,
-  //     //   headers: {
-  //     //     Authorization: `Bearer ${accessToken}`,
-  //     //   },
-  //     // })
-
-  //     const response = await fetch(`${process.env.REACT_APP_API_SANDBOX_UPHOLD}/api/v0/me`, {
-  //       method: 'GET',
-  //       headers: {
-  //         Authorization: `Bearer ${accessToken}`,
-  //         'Content-Type': 'application/json',
-  //       },
-  //     })
-
-  //     return response
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
 }
+export async function getUserInfo(accessToken?: string) {
+  try {
+    const response = await fetch(`${BASE_URL}/me`, {
+      method: 'GET',
+      headers: {
+        referrerPolicy: 'unsafe-url',
+        Authorization: `Bearer ${accessToken}`,
+        // 'Content-Type': 'application/json',
+      },
+    })
 
-export const getOauthClient = () => {
-  debugger
-  return !!sdk.oauthClient
+    return response
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 export const getAuthorizationUrl = () => {
