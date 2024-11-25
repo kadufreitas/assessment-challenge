@@ -1,3 +1,5 @@
+import { tokenManager } from './token'
+
 const PORT = 5000
 
 const BASE_URL = `https://localhost:${PORT}`
@@ -12,18 +14,36 @@ export async function getToken(code: string) {
     console.log(error)
   }
 }
-export async function getUserInfo(accessToken?: string) {
+export async function getUserInfo() {
+  const token = tokenManager.getToken()
   try {
     const response = await fetch(`${BASE_URL}/me`, {
       method: 'GET',
       headers: {
         referrerPolicy: 'unsafe-url',
-        Authorization: `Bearer ${accessToken}`,
-        // 'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
     })
+    const result = await response.json()
 
-    return response
+    return result
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function getTickersForCurrency(currency: string) {
+  const token = tokenManager.getToken()
+  try {
+    const response = await fetch(`${BASE_URL}/tickers/${currency}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    const result = await response.json()
+
+    return result
   } catch (error) {
     console.log(error)
   }

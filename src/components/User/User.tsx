@@ -1,14 +1,21 @@
 import { getUserInfo } from 'api'
-import { useCookie } from 'hooks/useCookies'
-import { useEffect } from 'react'
+import { useFetchData } from 'hooks/useFetchData'
+import { type UserType } from 'types'
 
 export const User = () => {
-  const { getItem } = useCookie()
-  const token = getItem('token')
-  useEffect(() => {
-    const user = getUserInfo(token)
-    console.log(user)
-  }, [token])
+  const { data: user, loading, error } = useFetchData<UserType>(getUserInfo)
 
-  return <div>User</div>
+  if (loading) {
+    return <div>Loading...</div>
+  }
+  if (!user || error) return null
+
+  return (
+    <div>
+      <div>{user.name}</div>
+      {/* {user.currencies.map((currency) => (
+        <div key={currency}>{currency}</div>
+      ))} */}
+    </div>
+  )
 }

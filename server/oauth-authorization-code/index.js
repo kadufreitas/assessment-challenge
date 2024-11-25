@@ -9,7 +9,7 @@ import https from 'https'
 import cors from 'cors'
 import path from 'path'
 import { randomBytes } from 'crypto'
-import { getUserInfo, getAccessToken } from './authorization-code-flow.js'
+import { getUserInfo, getAccessToken, getTickersForCurrency } from './authorization-code-flow.js'
 
 // Dotenv configuration.
 dotenv.config({ path: path.resolve() + '/.env' })
@@ -87,6 +87,21 @@ app.get('/token', async (req, res) => {
       token.access_token,
     )
     res.send(token)
+  } catch (error) {
+    // Unexpected error.
+    res.send(composeErrorPage(error))
+    return
+  }
+})
+
+/**
+ * Get tickers endpoint.
+ */
+
+app.get('/tickers/:currency', async (req, res) => {
+  try {
+    const tickers = await getTickersForCurrency(req?.headers?.authorization, req.params.currency)
+    res.send(tickers)
   } catch (error) {
     // Unexpected error.
     res.send(composeErrorPage(error))

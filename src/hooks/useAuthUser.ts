@@ -1,12 +1,10 @@
 import { getToken } from 'api'
-import { useEffect, useRef, useState } from 'react'
-import { useCookie } from './useCookies'
+import { useEffect, useRef } from 'react'
 import { useSearchParams } from './useSearchParams'
+import { tokenManager } from 'api/token'
 
 export const useAuthUser = () => {
-  const { getItem, setItem } = useCookie()
-  const currentToken = getItem('token')
-  const [token, setToken] = useState<string | null>(currentToken || null)
+  const token = tokenManager.getToken()
   const params = useSearchParams()
   const code = params.get('code')
   const isMounted = useRef<boolean>(false)
@@ -17,11 +15,9 @@ export const useAuthUser = () => {
         const token = await getToken(code)
 
         if (token) {
-          setToken(token)
-          setItem('token', token)
+          tokenManager.setToken(token)
         }
       } catch (error) {
-        setItem('token', '')
         console.error(error)
       }
     }
@@ -30,7 +26,7 @@ export const useAuthUser = () => {
     }
 
     isMounted.current = true
-  }, [code, setItem, token])
+  }, [code, token])
 
   return { token }
 }
