@@ -34,6 +34,7 @@ export const TickersForCurrency = () => {
       cacheKey: currency,
     })
     previousCurrency.current = currency
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currency])
 
   if (error) return null
@@ -52,10 +53,15 @@ export const TickersForCurrency = () => {
   return (
     <div>
       <div>
-        <input type="text" onChange={handleChangeAmount} value={amount} />
-        <select onChange={handleChange} value={currency}>
+        <input
+          type="text"
+          onChange={handleChangeAmount}
+          value={amount}
+          data-testid="amount-input"
+        />
+        <select onChange={handleChange} value={currency} data-testid="currency-select">
           {currenciesModel.getCurrencies().map((currency) => (
-            <option key={currency} value={currency}>
+            <option key={currency} value={currency} data-testid="currency-option">
               {currency}
             </option>
           ))}
@@ -69,7 +75,7 @@ export const TickersForCurrency = () => {
           const value = currenciesModel.calculateAmount(amount, ticker.ask)
 
           return (
-            <div key={ticker.pair}>
+            <div key={ticker.pair} data-testid="ticker">
               {value} - {ticker.currency}
             </div>
           )
