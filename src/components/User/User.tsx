@@ -3,7 +3,13 @@ import { useFetchData } from 'hooks/useFetchData'
 import { type UserType } from 'types'
 
 export const User = () => {
-  const { data: user, loading, error } = useFetchData<UserType>(getUserInfo)
+  const {
+    data: user,
+    loading,
+    error,
+  } = useFetchData<UserType>({
+    promise: getUserInfo,
+  })
 
   if (loading) {
     return <div>Loading...</div>
