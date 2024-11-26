@@ -18,6 +18,14 @@ const BoxList = styled.div`
   margin: 0 1.2rem;
 `
 
+const AmountEmpty = styled.div`
+  margin: 0 1.2rem;
+  p {
+    color: #8696a7;
+    text-align: center;
+  }
+`
+
 const currenciesModel = new CurrenciesModel()
 
 interface TickersForCurrencyProps {
@@ -111,7 +119,11 @@ export const TickersForCurrency = ({ disabled }: TickersForCurrencyProps) => {
             })}
           </List>
         </BoxList>
-      ) : null}
+      ) : (
+        <AmountEmpty>
+          <p>Enter an amount to check the rates</p>
+        </AmountEmpty>
+      )}
     </div>
   )
 }
