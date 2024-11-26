@@ -7,6 +7,13 @@ const TopBar = styled.div`
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 1fr 1fr 1fr;
+
+  @media (max-width: 450px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
 `
 const Menu = styled.div`
   margin: 0 1.2rem;
@@ -28,6 +35,9 @@ const LogoBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  @media (max-width: 450px) {
+    order: -1;
+  }
 `
 const Logo = styled(LogoSVG)`
   /* margin: 0 1.2rem; */
