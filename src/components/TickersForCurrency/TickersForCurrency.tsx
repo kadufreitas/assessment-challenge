@@ -2,14 +2,33 @@ import { getTickersForCurrency } from 'api'
 import { useFetchData } from 'hooks/useFetchData'
 import { CurrenciesModel } from 'model/CurrenciesModel'
 import React, { useEffect, useRef, useState } from 'react'
+import styled from 'styled-components'
 import { Currency, CurrencyPairs } from 'types'
+import { Chip } from 'ui/Chip'
+import { OptionType } from 'ui/Dropdown/Dropdown'
+import { InputSelect } from 'ui/InputSelect'
+import { List, ListItem } from 'ui/List'
 import { getFilteredCurrencies } from 'utils'
+
+const Box = styled.div`
+  margin-bottom: 1.5rem;
+`
+
+const BoxList = styled.div`
+  margin: 0 1.2rem;
+`
+
+const Wrapper = styled.div`
+  width: 400px;
+`
 
 const currenciesModel = new CurrenciesModel()
 
 export const TickersForCurrency = () => {
   const [amount, setAmount] = useState<number>(0)
   const [currency, setCurrency] = useState<Currency>(Currency.USD)
+
+  // Fetch data from the API and cache the result
   const {
     data: tickers,
     loading,
@@ -21,10 +40,18 @@ export const TickersForCurrency = () => {
     useCache: true,
     cacheKey: currency,
   })
-  const tickersCached = tickers ? getFilteredCurrencies(tickers, currency) : []
-  const previousCurrency = useRef<Currency>(currency)
 
-  // Fetch new data when currency changes
+  // Get the list of currencies from the model
+  const currencies = currenciesModel.getCurrencies()
+  // Get the list of currencies with images from the model
+  const currenciesWithImage = currenciesModel.getCurrenciesWithImage()
+  // Get the object with the currencies as keys
+  const currenciesObject = currenciesModel.mapCurrenciesWithImageToObject()
+  // Filter the tickers based on the current currency
+  const tickersFiltered = tickers ? getFilteredCurrencies(tickers, currency, currencies) : []
+  // Keep track of the previous currency
+  const previousCurrency = useRef<Currency>(currency)
+  // Fetch new data when the currency changes
   useEffect(() => {
     // Skip if currency hasn't changed.
     //This also prevent to fetch data twice on the first render
@@ -39,48 +66,53 @@ export const TickersForCurrency = () => {
 
   if (error) return null
 
+  /**
+   * Handle the change of amount
+   */
   const handleChangeAmount = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value || '0'
 
     setAmount(parseInt(value))
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrency(e.target.value as Currency)
+  /**
+   * Handle the change of currency
+   */
+  const handleChange = (option: OptionType) => {
+    setCurrency(option.value)
     setData(null)
   }
 
   return (
-    <div>
-      <div>
-        <input
-          type="text"
-          onChange={handleChangeAmount}
+    <Wrapper>
+      <Box>
+        <InputSelect
+          handleChangeInput={handleChangeAmount}
+          handleChangeSelect={handleChange}
           value={amount}
-          data-testid="amount-input"
+          options={currenciesWithImage.map((option) => ({
+            id: option.currency,
+            label: option.currency,
+            img: option.img,
+            value: option.currency,
+          }))}
         />
-        <select onChange={handleChange} value={currency} data-testid="currency-select">
-          {currenciesModel.getCurrencies().map((currency) => (
-            <option key={currency} value={currency} data-testid="currency-option">
-              {currency}
-            </option>
-          ))}
-        </select>
-      </div>
+      </Box>
       {loading ? (
         <div>Loading...</div>
       ) : // Show values only if amount is greater than 0
       amount > 0 ? (
-        tickersCached.map((ticker) => {
-          const value = currenciesModel.calculateAmount(amount, ticker.ask)
+        <BoxList>
+          <List>
+            {tickersFiltered.map((ticker) => {
+              const value = currenciesModel.calculateAmount(amount, ticker.ask)
+              const item = currenciesObject[ticker.currency]
 
-          return (
-            <div key={ticker.pair} data-testid="ticker">
-              {value} - {ticker.currency}
-            </div>
-          )
-        })
+              return <ListItem key={ticker.pair} label={value} append={<Chip item={item} />} />
+            })}
+          </List>
+        </BoxList>
       ) : null}
-    </div>
+    </Wrapper>
   )
 }

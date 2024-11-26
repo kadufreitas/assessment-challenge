@@ -1,11 +1,11 @@
-import { CurrenciesModel } from 'model/CurrenciesModel'
 import { Currency, CurrencyPairs } from 'types'
 
-const currenciesModel = new CurrenciesModel()
-export const getFilteredCurrencies = (tickers: CurrencyPairs[], currentCurrency: Currency) => {
+export const getFilteredCurrencies = (
+  tickers: CurrencyPairs[],
+  currentCurrency: Currency,
+  currencies: Currency[],
+) => {
   if (!tickers) return []
-
-  const currencies = currenciesModel.getCurrencies()
 
   const currenciesWithoutCurrent = currencies.filter((currency) => currency !== currentCurrency)
 

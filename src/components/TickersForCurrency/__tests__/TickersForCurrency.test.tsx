@@ -1,6 +1,5 @@
 import { fireEvent, queryByTestId, render, screen } from '@testing-library/react'
 import { useFetchData } from 'hooks/useFetchData'
-import { Currency } from 'types'
 import { mockCurrencyPairs } from '../mocks'
 import { TickersForCurrency } from '../TickersForCurrency'
 
@@ -20,20 +19,21 @@ beforeEach(() => {
 
 describe('TickersForCurrency', () => {
   it('renders initial state with default currency (USD)', () => {
-    const { getByText } = render(<TickersForCurrency />)
-    expect(getByText('USD')).toBeInTheDocument()
+    const { getByTestId } = render(<TickersForCurrency />)
+    const select = getByTestId('dropdown-select')
+
+    expect(select.textContent).toBe('USD')
   })
 
   it('handles change currency select', () => {
-    const { getByText, getByTestId, getAllByTestId } = render(<TickersForCurrency />)
-    const select = getByTestId('currency-select')
-    fireEvent.change(select, { target: { value: Currency.EUR } })
-    const options = getAllByTestId('currency-option')
-    const eurOption = options.filter(
-      (option) => option.textContent === 'EUR',
-    ) as HTMLOptionElement[]
-    expect(eurOption[0].selected).toBe(true)
-    expect(getByText('EUR')).toBeInTheDocument()
+    const { getByText, getByTestId } = render(<TickersForCurrency />)
+    const select = getByTestId('dropdown-select')
+    fireEvent.click(select)
+
+    const eurSelectOption = getByText('EUR')
+    fireEvent.click(eurSelectOption)
+
+    expect(select.textContent).toBe('EUR')
   })
 
   it('renders loading state', () => {
@@ -60,7 +60,8 @@ describe('TickersForCurrency', () => {
 
     fireEvent.change(input, { target: { value: '100' } })
 
-    const dataElement = await screen.findByText('95.201098 - EUR')
+    // Wait for the data to be rendered and check if it exists
+    const dataElement = await screen.findByText('95.201098')
 
     expect(dataElement).toBeInTheDocument()
   })
