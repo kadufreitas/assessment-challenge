@@ -82,10 +82,7 @@ app.get('/token', async (req, res) => {
 
     // Exchange the short-lived authorization code for a long-lived access token.
     const token = await getAccessToken(req.query.code)
-    console.log(
-      `Successfully exchanged authorization code ${req.query.code} for access token:`,
-      token.access_token,
-    )
+    console.log('Successfully authenticated!')
     res.send(token)
   } catch (error) {
     // Unexpected error.
@@ -100,7 +97,7 @@ app.get('/token', async (req, res) => {
 
 app.get('/tickers/:currency', async (req, res) => {
   try {
-    const tickers = await getTickersForCurrency(req?.headers?.authorization, req.params.currency)
+    const tickers = await getTickersForCurrency(req.params.currency)
     res.send(tickers)
   } catch (error) {
     // Unexpected error.

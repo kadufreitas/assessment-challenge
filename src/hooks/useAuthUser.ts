@@ -1,10 +1,10 @@
 import { getToken } from 'api'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from './useSearchParams'
 import { tokenManager } from 'api/token'
 
 export const useAuthUser = () => {
-  const token = tokenManager.getToken()
+  const [token, setToken] = useState(tokenManager.getToken())
   const params = useSearchParams()
   const code = params.get('code')
   const isMounted = useRef<boolean>(false)
@@ -16,6 +16,7 @@ export const useAuthUser = () => {
 
         if (token) {
           tokenManager.setToken(token)
+          setToken(token)
         }
       } catch (error) {
         console.error(error)

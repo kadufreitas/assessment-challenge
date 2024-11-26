@@ -18,13 +18,12 @@ const BoxList = styled.div`
   margin: 0 1.2rem;
 `
 
-const Wrapper = styled.div`
-  width: 400px;
-`
-
 const currenciesModel = new CurrenciesModel()
 
-export const TickersForCurrency = () => {
+interface TickersForCurrencyProps {
+  disabled?: boolean
+}
+export const TickersForCurrency = ({ disabled }: TickersForCurrencyProps) => {
   const [amount, setAmount] = useState<number>(0)
   const [currency, setCurrency] = useState<Currency>(Currency.USD)
 
@@ -84,7 +83,7 @@ export const TickersForCurrency = () => {
   }
 
   return (
-    <Wrapper>
+    <div>
       <Box>
         <InputSelect
           handleChangeInput={handleChangeAmount}
@@ -113,6 +112,6 @@ export const TickersForCurrency = () => {
           </List>
         </BoxList>
       ) : null}
-    </Wrapper>
+    </div>
   )
 }

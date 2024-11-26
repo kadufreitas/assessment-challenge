@@ -1,8 +1,6 @@
 import { Footer } from 'components/Footer'
 import { Header } from 'components/Header'
 import { TickersForCurrency } from 'components/TickersForCurrency'
-import { User } from 'components/User'
-import { useAppContext } from 'context'
 import styled from 'styled-components'
 
 const StyledContainer = styled.div`
@@ -13,25 +11,43 @@ const StyledContainer = styled.div`
 `
 
 const StyledMain = styled.div`
-  margin: 10rem auto;
+  margin: 5rem auto;
+  width: 400px;
+`
+
+const Hero = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+  text-align: center;
+
+  h1 {
+    color: #3c4a5b;
+  }
+  p {
+    color: #8696a7;
+  }
 `
 
 export const Container = () => {
-  const { isLogged } = useAppContext()
-
   return (
     <div>
-      {isLogged && (
-        <StyledContainer>
-          <Header />
-          <StyledMain>
-            <User />
-            <TickersForCurrency />
-          </StyledMain>
-          <Footer />
-        </StyledContainer>
-      )}
-      {!isLogged && <p>Not logged</p>}
+      <StyledContainer>
+        <Header />
+        <StyledMain>
+          {/* <User /> */}
+          <Hero>
+            <h1>Currency Converter</h1>
+            <p>
+              Receive competitive and transparent pricing with no hidden spreads. See how we
+              compare.
+            </p>
+          </Hero>
+          <TickersForCurrency />
+        </StyledMain>
+        <Footer />
+      </StyledContainer>
     </div>
   )
 }

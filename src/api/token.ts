@@ -14,6 +14,7 @@ class TokenManager {
   // Set the token
   public setToken(token: string): void {
     this.token = token
+    Cookies.set('token', token)
   }
 
   // Clear the token

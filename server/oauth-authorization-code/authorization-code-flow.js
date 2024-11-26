@@ -76,14 +76,11 @@ export async function getUserInfo(authorization) {
   }
 }
 
-export async function getTickersForCurrency(authorization, currency) {
+export async function getTickersForCurrency(currency) {
   try {
     const response = await axios.request({
       method: 'GET',
       url: `${process.env.BASE_URL}/v0/ticker/${currency}`,
-      headers: {
-        Authorization: authorization ?? '',
-      },
     })
 
     return response.data

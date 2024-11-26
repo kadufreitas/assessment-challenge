@@ -35,6 +35,7 @@ export const useFetchData = <T>({ promise, useCache = false, cacheKey }: UseFetc
     hasRun.current = true
 
     if (!loading) fetchData({ promise, cacheKey })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return { data, loading, error, fetchData, setData }

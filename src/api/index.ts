@@ -33,13 +33,9 @@ export async function getUserInfo() {
 }
 
 export async function getTickersForCurrency(currency: string) {
-  const token = tokenManager.getToken()
   try {
     const response = await fetch(`${BASE_URL}/tickers/${currency}`, {
       method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     })
     const result = await response.json()
 
